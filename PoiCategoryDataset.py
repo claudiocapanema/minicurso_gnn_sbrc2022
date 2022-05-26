@@ -12,7 +12,7 @@ from spektral.data import Dataset, Graph
 class PoiCategoryDataset(Dataset):
     """
     The PoICategory Dataset
-    **Arguments**
+    **Arguments**pip
     - `name`: str, name of the dataset to load.
     """
 
@@ -22,8 +22,12 @@ class PoiCategoryDataset(Dataset):
 
     def poi_dataset(self, max_samples=5000):
 
-        A_df = pd.read_csv("/home/claudio/Documentos/pycharm_projects/minicurso_gnn_sbrc2022/datasets/adjacency.csv").dropna(how='any', axis=0)
-        X_df = pd.read_csv("/home/claudio/Documentos/pycharm_projects/minicurso_gnn_sbrc2022/datasets/node_features.csv").dropna(how='any', axis=0)
+        A_df = pd.read_csv(
+            "https://raw.githubusercontent.com/claudiocapanema/minicurso_gnn_sbrc2022/main/datasets/adjacency.zip",
+            compression='zip').dropna(how='any', axis=0)
+        X_df = pd.read_csv(
+            "https://raw.githubusercontent.com/claudiocapanema/minicurso_gnn_sbrc2022/main/datasets/node_features.zip",
+            compression='zip').dropna(how='any', axis=0)
         print("Original number of graphs", len(A_df))
         userid = A_df['user_id'].tolist()[:max_samples]
         matrix_df = A_df['matrices'].tolist()
@@ -54,7 +58,6 @@ class PoiCategoryDataset(Dataset):
             labels = np.array(np_utils.to_categorical(labels, num_classes=7))
             labels_labels_list.append(labels)
 
-            indice = np.argmax(np.sum(adjacency, axis=1))
             """ Change the pre-processing based on the used message passing layer """
             adjacency = sk.layers.ARMAConv.preprocess(adjacency)
             count_nodes += len(adjacency)
